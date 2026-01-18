@@ -6,15 +6,18 @@ app.use(express.json()); //ayuda que el servidor entienda json
 
 // req = request (lo que entra)
 // res = response (lo que sale)
-app.get('/', (req, res) => { 
-    res.send('Hello World!'); //mensaje de prueba
-});
+//app.get('/', (req, res) => { 
+    //res.send('Hello World!'); //mensaje de prueba
+//});
 
-app.post('/analizar-vendedor', (req, res) => { 
-    console.log(req.body);
+const vendedorRoutes = require('./routes/vendedorRoutes'); //importar rutas de vendedor
+app.use('/vendedor', vendedorRoutes); //usar rutas de vendedor
+
+//app.post('/analizar-vendedor', (req, res) => { 
+    //console.log(req.body);
     // Lógica para analizar el vendedor
-    res.send('dades rebudes correctament');
-});
+    //res.send('dades rebudes correctament');
+//});
 
 //app.listen = funcion para arrancar el servidor 3000 el puerto del server
 app.listen(3000, () => { 
