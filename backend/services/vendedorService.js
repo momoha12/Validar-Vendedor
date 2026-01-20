@@ -1,9 +1,6 @@
 
-
-const analizarVendedorService = (datosVendedor) => { //funcion de caluclo de puntos del vendedor
+const calcularPuntos = (datosVendedor) => { //funcion de caluclo de puntos del vendedor
     let puntos = 0; //variable para guardar puntos del vendedor que se mostraran al usuario
-    let mensaje = ''; //variable para guardar mensaje de fiabilidad del vendedor
-    let color = ''; //variable para guardar color de fiabilidad del vendedor
     // Lógica para calcular los puntos del vendedor
     if (datosVendedor.telefono) {
         puntos += 30;
@@ -14,7 +11,13 @@ const analizarVendedorService = (datosVendedor) => { //funcion de caluclo de pun
     if (puntos > 100) {
         puntos = 100;
     }
-    // missatge i color depenent de la puntuació
+    return puntos; //retornar puntos
+}
+
+const interpretarPuntos = (puntos) => { //funcion de interpretacion de puntos del vendedor
+    let mensaje = ''; //variable para guardar mensaje de fiabilidad del vendedor
+    let color = ''; //variable para guardar color de fiabilidad del vendedor
+    // Lógica para interpretar los puntos del vendedor
     if (puntos >= 70) {
         mensaje = 'Vendedor bastante fiable';
         color = 'verde';
@@ -25,8 +28,14 @@ const analizarVendedorService = (datosVendedor) => { //funcion de caluclo de pun
         mensaje = 'Vendedor poco fiable, no recomendado';
         color = 'rojo';
     }
-    return {puntos, mensaje, color}; //retornar puntos, mensaje y color
-}
+    return {mensaje, color}; //retornar mensaje y color
+};
+
+const analizarVendedorService = (datosVendedor) => { //funcion de caluclo de puntos del vendedor
+    const puntos = calcularPuntos(datosVendedor); //llamar a función de calcular puntos
+    const resultado = interpretarPuntos(puntos); //llamar a función de interpretar puntos
+    return {puntos, resultado}; //retornar puntos y mensaje y color
+};
 
 const exportar = module.exports = {
     analizarVendedorService
