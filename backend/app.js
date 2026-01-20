@@ -21,5 +21,5 @@ app.use('/vendedor', vendedorRoutes); //usar rutas de vendedor
 
 //app.listen = funcion para arrancar el servidor 3000 el puerto del server
 app.listen(3000, () => { 
-    console.log('Example app listening on port 3000!'); //mensaje de prueba en consola
+    console.log('Exemple app escolta el port 3000!'); //mensaje de prueba en consola
 });
