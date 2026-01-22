@@ -1,20 +1,71 @@
-const calcularPuntos = (datosVendedor) => { //funcion de caluclo de puntos del vendedor
+//constantes de pesos de puntos
+const PESOS = {
+    positivo: {
+        telefono: 30,
+        web: 30,
+        precioMuyBajo: 0,
+        reportes: 0,
+    },
+
+    negativo: {
+        telefono: 0,
+        web: 0,
+        precioMuyBajo: -25,
+        reportes: -20,
+    }
+}
+// validación de datos de entrada
+const validarDatosVendedor = (datosVendedor) => {
+    if (!datosVendedor || typeof datosVendedor !== 'object') {
+        throw new Error('Datos de vendedor inválidos');
+    }
+
+    if (
+        datosVendedor.telefono !== undefined &&
+        typeof datosVendedor.telefono !== 'boolean'
+    ) {
+        throw new Error('El campo "telefono" no debe ser booleano');
+    }
+
+    if (
+        datosVendedor.web !== undefined &&
+        typeof datosVendedor.web !== 'boolean'
+    ) {
+        throw new Error('El campo "web" no debe ser booleano');
+    }
+
+    if (
+        datosVendedor.precioMuyBajo !== undefined &&
+        typeof datosVendedor.precioMuyBajo !== 'boolean'
+    ) {
+        throw new Error('El campo "precioMuyBajo" no debe ser booleano');
+    }
+
+    if (
+        datosVendedor.reportes !== undefined &&
+        (typeof datosVendedor.reportes !== 'number' || datosVendedor.reportes < 0)
+    ) {
+        throw new Error('El campo "reportes" nodebe ser un número mayor o igual a 0');
+    }
+};
+//funcion de caluclo de puntos del vendedor
+const calcularPuntos = (datosVendedor) => {
     let puntos = 0; //variable para guardar puntos del vendedor que se mostraran al usuario
     // Lógica para calcular los puntos del vendedor
     if (datosVendedor.telefono) { //si tiene telefono sumar 30 puntos
-        puntos += 30;
+        puntos += PESOS.positivo.telefono;
     }
     if (datosVendedor.web) { //si tiene web sumar 30 puntos
-        puntos += 30;
+        puntos += PESOS.positivo.web;
     }
     if (datosVendedor.precioMuyBajo === true) { //si tiene precio muy bajo restar 25 puntos
-        puntos -= 25;
+        puntos += PESOS.negativo.precioMuyBajo;
     }
     if (datosVendedor.reportes && datosVendedor.reportes > 0) { //si tiene reportes restar 20 puntos por cada reporte
-        puntos -= datosVendedor.reportes * 20;
+        puntos += PESOS.negativo.reportes * datosVendedor.reportes;
     }
     if (!datosVendedor.telefono && !datosVendedor.web) { //si no tiene telefono ni web restar 30 puntos
-        puntos -= 30;
+        puntos += PESOS.negativo.telefono + PESOS.negativo.web;
     }
 
     if (puntos > 100) { //si puntos superan 100 puntos, puntos = 100
@@ -24,9 +75,31 @@ const calcularPuntos = (datosVendedor) => { //funcion de caluclo de puntos del v
         puntos = 0;
     }
     return puntos; //retornar puntos
-}
+};
 
-const interpretarPuntos = (puntos) => { //funcion de interpretacion de puntos del vendedor
+//funcion de obtencion de razones de puntos del vendedor
+const obtenerRazones = (datosVendedor) =>{
+    const razones = []; //array para guardar razones de puntos del vendedor
+    if (datosVendedor.telefono) { //si tiene telefono sumar 30 puntos
+        razones.push('Tiene telefono');
+    }
+    if (datosVendedor.web) { //si tiene web sumar 30 puntos
+        razones.push('Tiene web');
+    }
+    if (datosVendedor.precioMuyBajo === true) { //si tiene precio muy bajo restar 25 puntos
+        razones.push('Precio muy bajo');
+    }
+    if (datosVendedor.reportes && datosVendedor.reportes > 0) { //si tiene reportes restar 20 puntos por cada reporte
+        razones.push(`Tiene reportes de otros usuarios`);
+    }
+    if (!datosVendedor.telefono && !datosVendedor.web) { //si no tiene telefono ni web restar 30 puntos
+        razones.push('No tiene telefono ni web');
+    }
+    return razones; //retornar razones
+};
+
+//funcion de interpretacion de puntos del vendedor
+const interpretarPuntos = (puntos) => { 
     let mensaje = ''; //variable para guardar mensaje de fiabilidad del vendedor
     let color = ''; //variable para guardar color de fiabilidad del vendedor
     // Lógica para interpretar los puntos del vendedor
@@ -46,15 +119,21 @@ const interpretarPuntos = (puntos) => { //funcion de interpretacion de puntos de
     }; //retornar mensaje y color
 };
 
-const analizarVendedorService = (datosVendedor) => { //funcion de caluclo de puntos del vendedor
+//funcion de analisis de vendedor
+const analizarVendedorService = (datosVendedor) => { 
     const puntos = calcularPuntos(datosVendedor); //llamar a función de calcular puntos
     const resultado = interpretarPuntos(puntos); //llamar a función de interpretar puntos
+    const razones = obtenerRazones(datosVendedor); //llamar a función de obtener razones
+    
     return {
         puntos,
-        resultado
+        resultado,
+        razones
     }; //retornar puntos y mensaje y color
 };
 
+
+//exportar funciones de analisis de vendedor
 const exportar = module.exports = {
     analizarVendedorService
 };
