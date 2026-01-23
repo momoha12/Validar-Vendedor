@@ -1,17 +1,6 @@
-//constantes de pesos de puntos
-const PESOS = {
-    positivo: {
-        telefono: 40,
-        web: 40,
-        verificacion: 20,
+//importar pesos de vendedor
+const PESOS = require('../config/pesosVendedor'); 
 
-    },
-
-    negativo: {
-        precioMuyBajo: -25,
-        reportes: -20,
-    }
-}
 // validación de datos de entrada
 const validarDatosVendedor = (datosVendedor) => {
     if (!datosVendedor || typeof datosVendedor !== 'object') {
