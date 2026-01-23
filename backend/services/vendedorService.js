@@ -1,15 +1,13 @@
 //constantes de pesos de puntos
 const PESOS = {
     positivo: {
-        telefono: 30,
-        web: 30,
-        precioMuyBajo: 0,
-        reportes: 0,
+        telefono: 40,
+        web: 40,
+        verificacion: 20,
+
     },
 
     negativo: {
-        telefono: 0,
-        web: 0,
         precioMuyBajo: -25,
         reportes: -20,
     }
@@ -51,20 +49,30 @@ const validarDatosVendedor = (datosVendedor) => {
 //funcion de caluclo de puntos del vendedor
 const calcularPuntos = (datosVendedor) => {
     let puntos = 0; //variable para guardar puntos del vendedor que se mostraran al usuario
+    const {
+        telefono = false,
+            web = false,
+            precioMuyBajo = false,
+            reportes = 0,
+            verificacion = false,
+    } = datosVendedor;
     // Lógica para calcular los puntos del vendedor
-    if (datosVendedor.telefono) { //si tiene telefono sumar 30 puntos
+    if (telefono) { //si tiene telefono sumar 30 puntos
         puntos += PESOS.positivo.telefono;
     }
-    if (datosVendedor.web) { //si tiene web sumar 30 puntos
+    if (web) { //si tiene web sumar 30 puntos
         puntos += PESOS.positivo.web;
     }
-    if (datosVendedor.precioMuyBajo === true) { //si tiene precio muy bajo restar 25 puntos
+    if (verificacion) { //si tiene verificacion sumar 20 puntos
+        puntos += PESOS.positivo.verificacion;
+    }
+    if (precioMuyBajo === true) { //si tiene precio muy bajo restar 25 puntos
         puntos += PESOS.negativo.precioMuyBajo;
     }
-    if (datosVendedor.reportes && datosVendedor.reportes > 0) { //si tiene reportes restar 20 puntos por cada reporte
-        puntos += PESOS.negativo.reportes * datosVendedor.reportes;
+    if (reportes > 0) { //si tiene reportes restar 20 puntos por cada reporte
+        puntos += PESOS.negativo.reportes * reportes;
     }
-    if (!datosVendedor.telefono && !datosVendedor.web) { //si no tiene telefono ni web restar 30 puntos
+    if (!telefono && !web) { //si no tiene telefono ni web restar 30 puntos
         puntos += PESOS.negativo.telefono + PESOS.negativo.web;
     }
 
@@ -78,7 +86,7 @@ const calcularPuntos = (datosVendedor) => {
 };
 
 //funcion de obtencion de razones de puntos del vendedor
-const obtenerRazones = (datosVendedor) =>{
+const obtenerRazones = (datosVendedor) => {
     const razones = []; //array para guardar razones de puntos del vendedor
     if (datosVendedor.telefono) { //si tiene telefono sumar 30 puntos
         razones.push('Tiene telefono');
@@ -99,7 +107,7 @@ const obtenerRazones = (datosVendedor) =>{
 };
 
 //funcion de interpretacion de puntos del vendedor
-const interpretarPuntos = (puntos) => { 
+const interpretarPuntos = (puntos) => {
     let mensaje = ''; //variable para guardar mensaje de fiabilidad del vendedor
     let color = ''; //variable para guardar color de fiabilidad del vendedor
     // Lógica para interpretar los puntos del vendedor
@@ -120,11 +128,12 @@ const interpretarPuntos = (puntos) => {
 };
 
 //funcion de analisis de vendedor
-const analizarVendedorService = (datosVendedor) => { 
+const analizarVendedorService = (datosVendedor) => {
     const puntos = calcularPuntos(datosVendedor); //llamar a función de calcular puntos
+    console.log('PUNTOS CALCULADOS:', puntos);
     const resultado = interpretarPuntos(puntos); //llamar a función de interpretar puntos
     const razones = obtenerRazones(datosVendedor); //llamar a función de obtener razones
-    
+
     return {
         puntos,
         resultado,
