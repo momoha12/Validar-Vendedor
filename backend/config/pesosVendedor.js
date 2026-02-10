@@ -11,4 +11,5 @@ const PESOS = {
         reportes: -20,
     }
 }
+
 module.exports = PESOS;
