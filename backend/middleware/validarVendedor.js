@@ -1,55 +1,61 @@
-//middleware para validar datos de entrada
-const validarVendedor = (req, res, next) => {
-    const datosVendedor = req.body;
-    let ret; // variable que ser rescriu i retorna el error 
+// middleware para validar datos de entrada
 
-    if (!datosVendedor || typeof datosVendedor !== 'object') {
-       ret = res.status(400).json({ //respuesta de error
-            ok: false, //indica que ha ocurrido un error
-            error: 'Datos de vendedor inválidos' //mensaje de error
+const validarVendedor = (req, res, next) => {
+
+    const datos = req.body;
+    let ret;
+
+    // Validación general del objeto
+    if (!datos || typeof datos !== 'object') {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'Datos de vendedor inválidos'
         });
     }
-    //validar campos de entrada
-    else if (
-        datosVendedor.telefono !== undefined &&
-        typeof datosVendedor.telefono !== 'boolean'
-    ) {
-        ret = res.status(400).json({ //respuesta de error
-            ok: false, //indica que ha ocurrido un error
-            error: 'El campo "telefono" es booleano' //mensaje de error
+
+    // Validación de teléfono
+    else if (datos.telefono !== undefined && typeof datos.telefono !== 'number') {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'El teléfono debe ser un número'
         });
     }
-    else if (
-        datosVendedor.web !== undefined &&
-        typeof datosVendedor.web !== 'boolean'
-    ) {
-        ret = res.status(400).json({ //respuesta de error
-            ok: false, //indica que ha ocurrido un error
-            error: 'El campo "web" es booleano' //mensaje de error
+
+    // Validación de web
+    else if (datos.web !== undefined && typeof datos.web !== 'string') {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'La web debe ser un texto'
         });
     }
-    else if (
-        datosVendedor.precioMuyBajo !== undefined &&
-        typeof datosVendedor.precioMuyBajo == 'boolean'
-    ) {
-        ret = res.status(400).json({ //respuesta de error
-            ok: false, //indica que ha ocurrido un error
-            error: 'El campo "precioMuyBajo" es booleano' //mensaje de error
+
+    // Validación de verificacion
+    else if (datos.verificacion !== undefined && typeof datos.verificacion !== 'boolean') {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'verificacion debe ser booleano'
         });
     }
-    else if (
-        datosVendedor.reportes !== undefined &&
-        (typeof datosVendedor.reportes !== 'number' || datosVendedor.reportes < 0)
-    ) {
-        ret = res.status(400).json({ //respuesta de error
-            ok: false, //indica que ha ocurrido un error
-            error: 'El campo "reportes" debe ser un número mayor o igual a 0' //mensaje de error
+
+    // Validación de precioMuyBajo
+    else if (datos.precioMuyBajo !== undefined && typeof datos.precioMuyBajo !== 'boolean') {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'precioMuyBajo debe ser booleano'
         });
     }
-    if (ret) { // si ret es true, hi ha hagut un error
-        return ret; // retornem l'error
-        console.log(ret);
+
+    // Validación de reportes
+    else if (datos.reportes !== undefined && (typeof datos.reportes !== 'number' || datos.reportes < 0)) {
+        ret= res.status(400).json({
+            ok: false,
+            error: 'reportes debe ser un número mayor o igual a 0'
+        });
     }
-    else next(); // si no hi ha hagut cap error, passem al següent middleware
+    
+    
+    if(ret) return ret; // Si hay un error, devolverlo
+    else next(); // Si todo está bien, continuar
 };
+
 module.exports = validarVendedor;
