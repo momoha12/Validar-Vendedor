@@ -10,8 +10,11 @@ app.get('/', (req, res) => {
     res.send('Hello World!'); //mensaje de prueba
 });
 
+
 const vendedorRoutes = require('./routes/vendedorRoutes'); //importar rutas de vendedor
+const error = require('./middleware/error'); //importar middleware de error
 app.use('/vendedor', vendedorRoutes); //usar rutas de vendedor
+app.use(error); //usar middleware de error
 
 //app.post('/analizar-vendedor', (req, res) => { 
     //console.log(req.body);
