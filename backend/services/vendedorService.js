@@ -16,13 +16,12 @@ const calcularPuntos = (datosVendedor) => {
     //si tiene verificacion sumar 20 puntos
     if (datosVendedor.verificacion) puntos += PESOS.positivo.verificacion;
 
-    //si tiene precio muy bajo restar 25 puntos
+    //si tiene precio muy bajo restar 25 puntosu
     if (datosVendedor.precioMuyBajo === true) puntos += PESOS.negativo.precioMuyBajo;
 
     //si tiene reportes restar 20 puntos por cada reporte
-    if (datosVendedor.reportes > 0) {
-        puntos += PESOS.negativo.reportes * datosVendedor.reportes;
-    }
+    if (datosVendedor.reportes > 0) puntos += PESOS.negativo.reportes * datosVendedor.reportes;
+    
     //si no tiene telefono ni web restar 30 puntos
     if (!datosVendedor.telefono && !datosVendedor.web) puntos += PESOS.negativo.telefono + PESOS.negativo.web;
 
