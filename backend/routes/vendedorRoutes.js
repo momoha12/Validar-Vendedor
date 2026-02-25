@@ -1,7 +1,10 @@
-const express = require('express'); //require = funcion importar librerias
-const routes = express.Router(); //routes = objeto para crear rutas
-const vendedorController = require('../controllers/vendedorController'); //importar controlador
+const express = require('express');
+const routes = express.Router();
 
-routes.post('/analizar-vendedor', vendedorController.analizarVendedor);
+const vendedorController = require('../controllers/vendedorController');
+const validarVendedor = require('../middleware/validarVendedor');
 
-module.exports = routes; //exportar rutas
+// primero validar, luego ejecutar controlador
+routes.post('/analizar-vendedor', validarVendedor, vendedorController.analizarVendedor);
+
+module.exports = routes;
