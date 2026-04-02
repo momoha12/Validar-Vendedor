@@ -1,34 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="BootStrap/bootstrap-5.3.8-dist/css/bootstrap.min.css" />
-    <!--bootstrap icons-->
-    <link rel="stylesheet" href="BootStrap/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
-    <!--Bootstrap-->
-    <script src="BootStrap/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
-    <title>Document</title>
+    <title>Analizador de Vendedores</title>
+    <link rel="stylesheet" href="CSS/styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row mb-3">
-                    <div class="col-4 d-grid">
-                        <label for="adress" class="col-form-label ">Adreça<b class="text-danger">*</b></label>
-                    </div>
-                    <div class="col-8">
-                        <input type="text" placeholder="Adreça" class="form-control" id="adress" name="adress"
-                            title="L'adreça a de contenir entre 2 i 20 caracters" required autocomplete="adress"
-                            pattern="[A-Za-z0-9\s]{2,60}" />
-                    </div>
-                </div>
-            </div>
+    <div class="app">
+    <h1>Analizador de Vendedor</h1>
+
+    <form id="form">
+        <div class="campo">
+            <label>¿Tiene teléfono?</label>
+            <input type="checkbox" id="telefono">
         </div>
+
+        <div class="campo">
+            <label>¿Tiene web?</label>
+            <input type="checkbox" id="web">
+        </div>
+
+        <div class="campo">
+            <label>¿Precio muy bajo?</label>
+            <input type="checkbox" id="precioMuyBajo">
+        </div>
+
+        <div class="campo">
+            <label>Reportes</label>
+            <input type="number" id="reportes" min="0" value="0">
+        </div>
+
+        <button type="submit">Analizar</button>
+    </form>
+
+    <div id="resultado"></div>
+</div>
+
+<script src="script.js"></script>
 </body>
 
 </html>
