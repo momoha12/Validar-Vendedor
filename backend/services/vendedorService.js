@@ -1,93 +1,105 @@
-//importar pesos de vendedor
 const PESOS = require('../config/pesosVendedor.js');
-const validarVendedor = require('../middleware/validarVendedor.js');
 
-//funcion de caluclo de puntos del vendedor
-const calcularPuntos = (datosVendedor) => {
-    let puntos = 0; //variable para guardar puntos del vendedor que se mostraran al usuario
+// 🔹 validar teléfono
+const validarTelefono = (telefono) => {
+    if (!telefono) return false;
+    const limpio = telefono.toString().replace(/\s/g, '');
+    return /^\d{9}$/.test(limpio);
+};
 
-    /* Lógica para calcular los puntos del vendedor */
-    //si tiene telefono sumar 30 puntos
-    if (datosVendedor.telefono) puntos += PESOS.positivo.telefono;  
+// 🔹 validar web
+const validarWeb = (web) => {
+    if (!web) return false;
+    return web.startsWith('http://') || web.startsWith('https://');
+};
 
-    //si tiene web sumar 30 puntos
-    if (datosVendedor.web) puntos += PESOS.positivo.web;
+// 🔹 detectar precio sospechoso
+const detectarPrecioBajo = (precio) => {
+    const PRECIO_MINIMO = 20;
+    return precio < PRECIO_MINIMO;
+};
 
-    //si tiene verificacion sumar 20 puntos
-    if (datosVendedor.verificacion) puntos += PESOS.positivo.verificacion;
+// 🔹 simular reportes
+const generarReportes = () => {
+    return Math.floor(Math.random() * 3); // 0 a 2 reportes
+};
 
-    //si tiene precio muy bajo restar 25 puntosu
-    if (datosVendedor.precioMuyBajo === true) puntos += PESOS.negativo.precioMuyBajo;
+// 🔹 calcular puntos
+const calcularPuntos = (analisis) => {
+    let puntos = 0;
 
-    //si tiene reportes restar 20 puntos por cada reporte
-    if (datosVendedor.reportes > 0) puntos += PESOS.negativo.reportes * datosVendedor.reportes;
-    
-    //si no tiene telefono ni web restar 30 puntos
-    if (!datosVendedor.telefono && !datosVendedor.web) puntos += PESOS.negativo.telefono + PESOS.negativo.web;
+    if (analisis.telefonoValido) puntos += PESOS.positivo.telefono;
+    if (analisis.webValida) puntos += PESOS.positivo.web;
 
-    //si puntos superan 100 puntos, puntos = 100
+    if (analisis.precioSospechoso) puntos += PESOS.negativo.precioMuyBajo;
+
+    if (analisis.reportes > 0) {
+        puntos += PESOS.negativo.reportes * analisis.reportes;
+    }
+
+    if (!analisis.telefonoValido && !analisis.webValida) {
+        puntos -= 30;
+    }
+
     if (puntos > 100) puntos = 100;
-
-    //si puntos son negativos, puntos = 0
     if (puntos < 0) puntos = 0;
 
-    return puntos; //retornar puntos
+    return puntos;
 };
 
-//funcion de obtencion de razones de puntos del vendedor
-const obtenerRazones = (datosVendedor) => {
-    const razones = []; //array para guardar razones de puntos del vendedor
+// 🔹 razones
+const obtenerRazones = (analisis) => {
+    const razones = [];
 
-    if (datosVendedor.telefono) razones.push('Tiene telefono');
+    if (analisis.telefonoValido) razones.push('Teléfono válido');
+    else razones.push('Teléfono inválido');
 
-    if (datosVendedor.web) razones.push('Tiene web');
+    if (analisis.webValida) razones.push('Web válida');
+    else razones.push('Web no válida');
 
-    if (datosVendedor.precioMuyBajo === true) razones.push('Precio muy bajo');
+    if (analisis.precioSospechoso) razones.push('Precio sospechosamente bajo');
 
-    if (datosVendedor.reportes && datosVendedor.reportes > 0) razones.push(`Tiene reportes de otros usuarios`);
-
-    if (!datosVendedor.telefono && !datosVendedor.web) razones.push('No tiene telefono ni web');
-
-    return razones; //retornar razones
-};
-
-//funcion de interpretacion de puntos del vendedor
-const interpretarPuntos = (puntos) => {
-    let mensaje = ''; //variable para guardar mensaje de fiabilidad del vendedor
-    let color = ''; //variable para guardar color de fiabilidad del vendedor
-    // Lógica para interpretar los puntos del vendedor
-    if (puntos >= 70) {
-        mensaje = 'Vendedor bastante fiable';
-        color = 'verde';
-    } else if (puntos >= 40) {
-        mensaje = 'Fiabilidad media, revisa con cuidado';
-        color = 'amarillo';
-    } else {
-        mensaje = 'Vendedor poco fiable, no recomendado';
-        color = 'rojo';
+    if (analisis.reportes > 0) {
+        razones.push(`Tiene ${analisis.reportes} reportes`);
     }
-    return {
-        mensaje,
-        color
-    }; //retornar mensaje y color
+
+    return razones;
 };
 
-//funcion de analisis de vendedor
-const analizarVendedorService = (datosVendedor) => {
-    const puntos = calcularPuntos(datosVendedor); //llamar a función de calcular puntos
-    console.log('PUNTOS CALCULADOS:', puntos); //mostrar puntos calculados en la consola
-    const resultado = interpretarPuntos(puntos); //llamar a función de interpretar puntos
-    const razones = obtenerRazones(datosVendedor); //llamar a función de obtener razones
+// 🔹 interpretar puntos
+const interpretarPuntos = (puntos) => {
+    if (puntos >= 70) {
+        return { mensaje: 'Vendedor bastante fiable', color: 'verde' };
+    } else if (puntos >= 40) {
+        return { mensaje: 'Fiabilidad media, revisa con cuidado', color: 'amarillo' };
+    } else {
+        return { mensaje: 'Vendedor poco fiable, no recomendado', color: 'rojo' };
+    }
+};
+
+// 🔹 función principal
+const analizarVendedorService = (datos) => {
+
+    if (!datos) throw new Error('Datos no proporcionados');
+
+    const analisis = {
+        telefonoValido: validarTelefono(datos.telefono),
+        webValida: validarWeb(datos.web),
+        precioSospechoso: detectarPrecioBajo(datos.precio),
+        reportes: generarReportes()
+    };
+
+    const puntos = calcularPuntos(analisis);
+    const resultado = interpretarPuntos(puntos);
+    const razones = obtenerRazones(analisis);
 
     return {
         puntos,
         resultado,
         razones
-    }; //retornar puntos y mensaje y color
+    };
 };
 
-
-//exportar funciones de analisis de vendedor
 module.exports = {
     analizarVendedorService
 };
