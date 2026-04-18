@@ -1,61 +1,36 @@
-// middleware para validar datos de entrada
-
 const validarVendedor = (req, res, next) => {
 
     const datos = req.body;
-    let ret;
 
-    // Validación general del objeto
     if (!datos || typeof datos !== 'object') {
-        ret= res.status(400).json({
+        return res.status(400).json({
             ok: false,
-            error: 'Datos de vendedor inválidos'
+            error: 'Datos inválidos'
         });
     }
 
-    // Validación de teléfono
-    else if (datos.telefono !== undefined && typeof datos.telefono !== 'number') {
-        ret= res.status(400).json({
+    if (!datos.telefono || typeof datos.telefono !== 'string') {
+        return res.status(400).json({
             ok: false,
-            error: 'El teléfono debe ser un número'
+            error: 'El teléfono es obligatorio y debe ser texto'
         });
     }
 
-    // Validación de web
-    else if (datos.web !== undefined && typeof datos.web !== 'string') {
-        ret= res.status(400).json({
+    if (!datos.web || typeof datos.web !== 'string') {
+        return res.status(400).json({
             ok: false,
-            error: 'La web debe ser un texto'
+            error: 'La web es obligatoria y debe ser texto'
         });
     }
 
-    // Validación de verificacion
-    else if (datos.verificacion !== undefined && typeof datos.verificacion !== 'boolean') {
-        ret= res.status(400).json({
+    if (datos.precio === undefined || typeof datos.precio !== 'number') {
+        return res.status(400).json({
             ok: false,
-            error: 'verificacion debe ser booleano'
+            error: 'El precio es obligatorio y debe ser número'
         });
     }
 
-    // Validación de precioMuyBajo
-    else if (datos.precioMuyBajo !== undefined && typeof datos.precioMuyBajo !== 'boolean') {
-        ret= res.status(400).json({
-            ok: false,
-            error: 'precioMuyBajo debe ser booleano'
-        });
-    }
-
-    // Validación de reportes
-    else if (datos.reportes !== undefined && (typeof datos.reportes !== 'number' || datos.reportes < 0)) {
-        ret= res.status(400).json({
-            ok: false,
-            error: 'reportes debe ser un número mayor o igual a 0'
-        });
-    }
-    
-    
-    if(ret) return ret; // Si hay un error, devolverlo
-    else next(); // Si todo está bien, continuar
+    next();
 };
 
 module.exports = validarVendedor;
