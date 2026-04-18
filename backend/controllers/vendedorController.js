@@ -1,14 +1,24 @@
-const vendedorService = require('../services/vendedorService.js'); // importar servicio de vendedor
-const analizarVendedor = (req, res, next) => { //función para analizar vendedor i guardar valor en una función
-    const datosVendedor = req.body; //obtener datos del vendedor de la solicitud
-    const resultado = vendedorService.analizarVendedorService(datosVendedor);//llamar al service para analizar el vendedor
-    return res.status(200).json({ //respuesta exitosa con el resultado del análisis
-        ok: true,
-        data: resultado
-    });
+const vendedorService = require('../services/vendedorService.js');
+
+const analizarVendedor = (req, res) => {
+    try {
+        const datosVendedor = req.body;
+
+        const resultado = vendedorService.analizarVendedorService(datosVendedor);
+
+        return res.status(200).json({
+            ok: true,
+            data: resultado
+        });
+
+    } catch (error) {
+        return res.status(400).json({
+            ok: false,
+            error: error.message
+        });
+    }
 };
 
 module.exports = {
     analizarVendedor
 };
-
