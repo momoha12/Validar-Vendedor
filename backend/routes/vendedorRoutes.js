@@ -8,3 +8,4 @@ const validarVendedor = require('../middleware/validarVendedor');
 routes.post('/analizar-vendedor', validarVendedor, vendedorController.analizarVendedor);
 
 module.exports = routes;
+
