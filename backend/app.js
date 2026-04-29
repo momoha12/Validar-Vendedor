@@ -1,7 +1,9 @@
 const express = require('express'); //require = funcion importar librerias
-                                     //express = libreria para crear servidores
+                                 //express = libreria para crear servidores
+const cors = require('cors');
 const app = express(); //app = objeto para crear servidores
 
+app.use(cors());
 app.use(express.json()); //ayuda que el servidor entienda json
 
 // req = request (lo que entra)
@@ -27,3 +29,4 @@ app.use(error); //usar middleware de error
 app.listen(3000, () => { 
     console.log('Exemple app escolta el port 3000!'); //mensaje de prueba en consola
 });
+
